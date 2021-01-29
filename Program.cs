@@ -13,23 +13,42 @@ namespace UVP280
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Чтение данных из прибора УВП-280.01\n");
+            IPAddress address;
+            int np;
+            while (true)
+            {
+                Console.Write("Введите IP преобразователя: ");
+                var ip = Console.ReadLine();
+                if (IPAddress.TryParse(ip, out address))
+                {
+                    while (true)
+                    {
+                        Console.Write("Введите номер трубопровода: ");
+                        var tp = Console.ReadLine();
+                        if (int.TryParse(tp, out np) && np > 0 && np <= 2)
+                            goto trm;
+                    }
+                }
+            }
+            trm: Console.Clear();
             while (true)
             {
                 Console.CursorLeft = 0;
                 Console.CursorTop = 0;
                 Console.WriteLine("Чтение данных из прибора УВП-280.01\n");
-                FetchData();
+                FetchData(address, np);
                 Console.WriteLine("\nНажмите ^C для завершения работы...");
             }
         }
 
-        private static void FetchData()
+        private static void FetchData(IPAddress ip, int trd)
         {
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 socket.SendTimeout = 90000;
                 socket.ReceiveTimeout = 90000;
-                var remoteEp = new IPEndPoint(IPAddress.Parse("192.168.0.56"), 502);
+                var remoteEp = new IPEndPoint(ip, 502); //"192.168.0.56"
                 socket.Connect(remoteEp);
                 if (socket.Connected)
                 {
@@ -37,8 +56,8 @@ namespace UVP280
                     FetchValue(socket, 1, ModbusFunc.H, 110, DataType.Long, "DCBA", "Контрольная константа (1234567890)", "int32");
                     FetchValue(socket, 1, ModbusFunc.H, 112, DataType.Single, "DCBA", "Контрольная константа (123.4567)", "float");
                     FetchValue(socket, 1, ModbusFunc.H, 114, DataType.Double, "HGFEDCBA", "Контрольная константа (123.4567890123456)", "double");
-                    Console.WriteLine("\nТекущие параметры трубопроводов:");
-                    var @base = 2000;
+                    Console.WriteLine($"\nТекущие параметры трубопровода № {trd}:");
+                    var @base = 2000 + (trd - 1) * 100;
                     FetchValue(socket, 1, ModbusFunc.R, @base + 0, DataType.Single, "DCBA", "Избыточное давление", "кгс/см2", 98067);
                     FetchValue(socket, 1, ModbusFunc.R, @base + 2, DataType.Single, "DCBA", "Абсолютное давление", "Па");
                     FetchValue(socket, 1, ModbusFunc.R, @base + 4, DataType.Single, "DCBA", "Температура", "°C");
