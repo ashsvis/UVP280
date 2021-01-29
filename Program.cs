@@ -106,22 +106,29 @@ namespace UVP280
 
         private static void FetchValue(Socket socket, byte node, ModbusFunc func, int addr, DataType ntype, string nswap, string desc, string eu = null, double divider = 1.0)
         {
-            socket.Send(PrepareFetchParam(node, func, addr, ntype));
-            Thread.Sleep(150);
-            var buff = new byte[1024];
-            var numBytes = socket.Receive(buff);
-            if (numBytes > 0)
+            try
             {
-                var answer = CleanAnswer(buff);
-                if (CheckAnswer(answer, node, func, ntype))
+                socket.Send(PrepareFetchParam(node, func, addr, ntype));
+                Thread.Sleep(150);
+                var buff = new byte[1024];
+                var numBytes = socket.Receive(buff);
+                if (numBytes > 0)
                 {
-                    var result = EncodeFetchAnswer(answer, node, func, addr, ntype, nswap);
-                    result.Desc = desc;
-                    result.Unit = eu;
-                    if (divider != 1.0)
-                        result.Value = Math.Round(Convert.ToDouble(result.Value) / divider, 8);
-                    Console.WriteLine(result);
+                    var answer = CleanAnswer(buff);
+                    if (CheckAnswer(answer, node, func, ntype))
+                    {
+                        var result = EncodeFetchAnswer(answer, node, func, addr, ntype, nswap);
+                        result.Desc = desc;
+                        result.Unit = eu;
+                        if (divider != 1.0)
+                            result.Value = Math.Round(Convert.ToDouble(result.Value) / divider, 8);
+                        Console.WriteLine(result);
+                    }
                 }
+            }
+            catch
+            {
+
             }
         }
 
