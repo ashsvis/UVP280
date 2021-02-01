@@ -380,7 +380,7 @@ namespace UVP280
 
         public override string ToString()
         {
-            return string.Format("{0}{1:0000}{5} {4,-42} {2,15} {3,-10}", Func, Addr, Value, Unit, Desc, TypeValue.ToString()[0]);
+            return string.Format("{0}{1:0000}{5} {4,-42} {2,15} {3,-11}", Func, Addr, Value, Unit, Desc, TypeValue.ToString()[0]);
         }
     }
 }
