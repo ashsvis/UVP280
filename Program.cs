@@ -135,6 +135,8 @@ namespace UVP280
 
         private static void FetchValue(Socket socket, byte node, ModbusFunc func, int addr, DataType ntype, string nswap, string desc, string eu = null, double divider = 1.0)
         {
+            Console.CursorTop = row++;
+            Console.CursorLeft = 0;
             try
             {
                 socket.Send(PrepareFetchParam(node, func, addr, ntype));
@@ -153,8 +155,6 @@ namespace UVP280
                         result.TypeValue = ntype;
                         if (divider != 1.0)
                             result.Value = Math.Round(Convert.ToDouble(result.Value) / divider, 8);
-                        Console.CursorTop = row++;
-                        Console.CursorLeft = 0;
                         Console.Write(result);
                     }
                 }
