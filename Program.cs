@@ -68,7 +68,7 @@ namespace UVP280
                     Console.CursorTop = row++;
                     Console.CursorLeft = 0;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write("Контрольные константы:");
+                    Console.Write("Контрольные константы:                                                     ");
                     Console.ForegroundColor = ConsoleColor.Gray;
                     FetchValue(socket, 1, ModbusFunc.H, 110, DataType.Long, "DCBA", "Контрольная константа (1234567890)", "int32");
                     FetchValue(socket, 1, ModbusFunc.H, 112, DataType.Single, "DCBA", "Контрольная константа (123.4567)", "float");
@@ -76,7 +76,7 @@ namespace UVP280
                     Console.CursorTop = row++;
                     Console.CursorLeft = 0;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write($"Текущие параметры трубопровода № {trd}:");
+                    Console.Write($"Текущие параметры трубопровода № {trd}:                                   ");
                     var @base = 2000 + (trd - 1) * 100;
                     Console.ForegroundColor = ConsoleColor.Gray;
                     FetchValue(socket, 1, ModbusFunc.R, @base + 0, DataType.Single, "DCBA", "Избыточное давление", "Па");                   //"кгс/см2", 98067
@@ -111,7 +111,7 @@ namespace UVP280
                     Console.CursorTop = row++;
                     Console.CursorLeft = 0;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write("Показатели за предыдущий час:");
+                    Console.Write("Показатели за предыдущий час:                                              ");
                     Console.ForegroundColor = ConsoleColor.Gray;
                     FetchValue(socket, 1, ModbusFunc.R, @base + 60, DataType.Single, "DCBA", "Масса", "кг");                                // "тонн", 1000
                     FetchValue(socket, 1, ModbusFunc.R, @base + 62, DataType.Single, "DCBA", "Объём в рабочих условиях", "м3(р.у)");        // "тыс.м3(р.у)", 1000
@@ -122,7 +122,7 @@ namespace UVP280
                     Console.CursorTop = row++;
                     Console.CursorLeft = 0;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write("Показатели за предыдущие сутки:");
+                    Console.Write("Показатели за предыдущие сутки:                                            ");
                     Console.ForegroundColor = ConsoleColor.Gray;
                     FetchValue(socket, 1, ModbusFunc.R, @base + 80, DataType.Single, "DCBA", "Масса", "кг");                                // "тонн", 1000
                     FetchValue(socket, 1, ModbusFunc.R, @base + 82, DataType.Single, "DCBA", "Объём в рабочих условиях", "м3(р.у)");        // "тыс.м3(р.у)", 1000
@@ -138,7 +138,8 @@ namespace UVP280
             try
             {
                 socket.Send(PrepareFetchParam(node, func, addr, ntype));
-                Thread.Sleep(200);
+
+                //Thread.Sleep(200);
                 var buff = new byte[1024];
                 var numBytes = socket.Receive(buff);
                 if (numBytes > 0)
