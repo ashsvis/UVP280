@@ -15,11 +15,9 @@ namespace UVP280
 
         static void Main(string[] args)
         {
-            IPAddress address;
-            int np;
             if (args != null && args.Length == 2 &&
-                IPAddress.TryParse(args[0], out address) &&
-                int.TryParse(args[1], out np) && np > 0 && np <= 2)
+                IPAddress.TryParse(args[0], out IPAddress address) &&
+                int.TryParse(args[1], out int np) && np > 0 && np <= 2)
                 goto trm;
             Console.WriteLine("Чтение данных из прибора УВП-280.01\n");
             while (true)
@@ -38,6 +36,7 @@ namespace UVP280
                 }
             }
             trm: Console.Clear();
+            Console.CursorVisible = false;
             while (true)
             {
                 row = 0;
